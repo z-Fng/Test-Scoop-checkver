@@ -1,0 +1,86 @@
+name: Test QQ-NT CDN URL
+
+on:
+  workflow_dispatch:
+
+env:
+  QQ-NT-URL: "https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsConfig.js"
+
+jobs:
+  curl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl | without compression
+        run: |
+          curl -v "${{ env.QQ-NT-URL }}"
+
+      - name: Curl | with compression
+        run: |
+          curl -v --compressed "${{ env.QQ-NT-URL }}"
+
+  powershell-pwsh:
+    runs-on: windows-latest
+    steps:
+      - name: Powershell | without compression
+        shell: powershell
+        run: |
+          $res = Invoke-WebRequest -Uri "${{ env.QQ-NT-URL }}" -Headers @{'Accept-Encoding' = 'identity'}
+          $res.Headers
+          $res.StatusCode
+          $res.Content
+
+      - name: Powershell | with empty Accept-Encoding header
+        shell: powershell
+        run: |
+          $res = Invoke-WebRequest -Uri "${{ env.QQ-NT-URL }}" -Headers @{'Accept-Encoding' = ''}
+          $res.Headers
+          $res.StatusCode
+          $res.Content
+
+      - name: Powershell | with empty header
+        shell: powershell
+        run: |
+          $res = Invoke-WebRequest -Uri "${{ env.QQ-NT-URL }}"
+          $res.Headers
+          $res.StatusCode
+          $res.Content
+
+      - name: Powershell | with compression
+        shell: powershell
+        run: |
+          $res = Invoke-WebRequest -Uri "${{ env.QQ-NT-URL }}" -Headers @{'Accept-Encoding' = 'gzip'}
+          $res.Headers
+          $res.StatusCode
+          $res.Content
+
+      - name: pwsh | without compression
+        shell: pwsh
+        run: |
+          $res = Invoke-WebRequest -Uri "${{ env.QQ-NT-URL }}" -Headers @{'Accept-Encoding' = 'identity'}
+          $res.Headers
+          $res.StatusCode
+          $res.Content
+
+      - name: pwsh | with empty Accept-Encoding header
+        shell: pwsh
+        run: |
+          $res = Invoke-WebRequest -Uri "${{ env.QQ-NT-URL }}" -Headers @{'Accept-Encoding' = ''}
+          $res.Headers
+          $res.StatusCode
+          $res.Content
+
+      - name: pwsh | with empty header
+        shell: pwsh
+        run: |
+          $res = Invoke-WebRequest -Uri "${{ env.QQ-NT-URL }}"
+          $res.Headers
+          $res.StatusCode
+          $res.Content
+
+      - name: pwsh | with compression
+        shell: pwsh
+        run: |
+          $res = Invoke-WebRequest -Uri "${{ env.QQ-NT-URL }}" -Headers @{'Accept-Encoding' = 'gzip'}
+          $res.Headers
+          $res.StatusCode
+          $res.Content
